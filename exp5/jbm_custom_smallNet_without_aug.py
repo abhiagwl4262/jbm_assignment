@@ -1,15 +1,7 @@
-
-# coding: utf-8
-
-# In[2]:
-
-
 import os
 import keras
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
-import warnings
-warnings.filterwarnings('ignore')
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 import numpy as np 
 import pandas as pd
@@ -30,16 +22,9 @@ from keras.metrics import categorical_crossentropy
 
 from sklearn.model_selection import train_test_split
 
-from tqdm import tqdm
-
-from os import makedirs
-from os.path import expanduser, exists, join
 
 from keras.models import Model
 from keras.layers import Input, Merge
-
-
-# In[3]:
 
 
 batch_size = 16
@@ -48,15 +33,8 @@ num_classes = 2
 n_epoches = 50
 input_shape = (img_height, img_width, 3)
 
-
-# In[4]:
-
-
 train_data_dir = "../data/train"
 valid_data_dir = "../data/valid"
-
-
-# In[5]:
 
 
 train_datagen = ImageDataGenerator(rescale=1./255, 
@@ -85,10 +63,6 @@ valid_generator = val_datagen.flow_from_directory(valid_data_dir,
 
 print ("train data: ", train_generator.n)
 print ("valid data: ", valid_generator.n)
-
-
-# In[9]:
-
 
 def create_baseline():
     # create model  
@@ -120,20 +94,9 @@ def create_baseline():
     model.add(Dense(num_classes, activation='softmax'))
     return model
 
-# In[47]:
 
 base_model = create_baseline()
 base_model.compile(Adam(lr=.001, decay=1e-5), loss='categorical_crossentropy', metrics=['accuracy'])
-
-
-# In[ ]:
-
-
-base_model.save_weights("jbm_custom_weights_15.h5")
-
-
-# In[48]:
-
 
 base_model.fit_generator(train_generator,
                       steps_per_epoch = train_generator.n // batch_size,
@@ -141,8 +104,6 @@ base_model.fit_generator(train_generator,
                       validation_steps = valid_generator.n // batch_size,
                       epochs = n_epoches,
                       verbose = 1)
-
-
 
 base_model.save_weights("jbm_custom_smallNet_50.h5")
 
